@@ -54,11 +54,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        distanceService = new DistanceService();
+        distanceService = new DistanceService("https://trueway-matrix.p.rapidapi.com/");
+        distanceService = new DistanceService("http://192.168.2.103:4000/");
+
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
         setContentView(binding.getRoot());
+        distanceService.loicationAPI.getLocations().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Log.d("onResponse", "response: " + response.body().string());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("onResponse", "response: " + t.getMessage());
+
+            }
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -98,47 +117,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mMap.setMinZoomPreference(15f);
         carParks = new ArrayList<>();
-        carParks.add(new CarPark("1", 21.022258, 105.825806, "DongDa", 100));
-        carParks.add(new CarPark("2", 21.027259, 105.805831, "HoangCau", 100));
-        carParks.add(new CarPark("3", 21.011036, 105.846921, "XaDan", 100));
+//        carParks.add(new CarPark("1", 21.022258, 105.825806, "DongDa", 100));
+//        carParks.add(new CarPark("2", 21.027259, 105.805831, "HoangCau", 100));
+//        carParks.add(new CarPark("3", 21.011036, 105.846921, "XaDan", 100));
 
-        for (int i = 0; i < carParks.size(); i++) {
-            CarPark carPark = carParks.get(i);
-            if (i != carParks.size() - 1) {
-                queryString = queryString.concat(carPark.getLat() + "," + carPark.getLon() + ";");
-            } else {
-                queryString = queryString.concat(carPark.getLat() + "," + carPark.getLon());
-            }
-        }
+//        for (int i = 0; i < carParks.size(); i++) {
+//            CarPark carPark = carParks.get(i);
+//            if (i != carParks.size() - 1) {
+//                queryString = queryString.concat(carPark.getLat() + "," + carPark.getLon() + ";");
+//            } else {
+//                queryString = queryString.concat(carPark.getLat() + "," + carPark.getLon());
+//            }
+//        }
         //call api
         binding.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                distanceService.distanceAPI.getDistances("trueway-matrix.p.rapidapi.com", "d9394aba86msh5d9752ebcfcb740p10782ajsnad6dfcd9b9c6", queryString, latitude + "," + longitude).enqueue(new Callback<DistanceResponse>() {
-                    @Override
-                    public void onResponse(Call<DistanceResponse> call, Response<DistanceResponse> response) {
-                        if (response.isSuccessful()) {
-                            for (int i = 0; i < carParks.size(); i++) {
-                                CarPark carPark = carParks.get(i);
-                                Log.d("onResponse", "response: " + response.body().getDistances().toString());
+//                distanceService.distanceAPI.getDistances("trueway-matrix.p.rapidapi.com", "d9394aba86msh5d9752ebcfcb740p10782ajsnad6dfcd9b9c6", queryString, latitude + "," + longitude).enqueue(new Callback<DistanceResponse>() {
+//                    @Override
+//                    public void onResponse(Call<DistanceResponse> call, Response<DistanceResponse> response) {
+//                        if (response.isSuccessful()) {
+//                            for (int i = 0; i < carParks.size(); i++) {
+//                                CarPark carPark = carParks.get(i);
+//                                Log.d("onResponse", "response: " + response.body().getDistances().toString());
+//
+//                                List<Double> dumpDistances = (List<Double>) response.body().getDistances().get(i);
+//                                List<Double> dumpDurations = (List<Double>) response.body().getDurations().get(i);
+//                                carPark.setDistance(dumpDistances.get(0));
+//                                carPark.setDuration(
+//
+//                                        dumpDurations.get(0));
+//                                carParks.set(i, carPark);
+//                            }
+//                            Log.d("onResponse", "carparks: " + carParks.toString());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<DistanceResponse> call, Throwable t) {
+//                        Log.d("onCallFailure", "onResponse: " + t.getMessage());
+//                    }
+//                });
 
-                                List<Double> dumpDistances = (List<Double>) response.body().getDistances().get(i);
-                                List<Double> dumpDurations = (List<Double>) response.body().getDurations().get(i);
-                                carPark.setDistance(dumpDistances.get(0));
-                                carPark.setDuration(
-
-                                        dumpDurations.get(0));
-                                carParks.set(i, carPark);
-                            }
-                            Log.d("onResponse", "carparks: " + carParks.toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DistanceResponse> call, Throwable t) {
-                        Log.d("onCallFailure", "onResponse: " + t.getMessage());
-                    }
-                });
             }
         });
     }

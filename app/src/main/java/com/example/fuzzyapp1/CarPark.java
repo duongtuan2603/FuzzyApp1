@@ -2,11 +2,13 @@ package com.example.fuzzyapp1;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 
-public class CarPark {
+
+public class CarPark implements Serializable {
     private String id;
-    private double lat;
-    private double lon;
+    private Double lat;
+    private Double lon;
     private String name;
     private int emptySpace;
     private double duration;
@@ -18,7 +20,7 @@ public class CarPark {
 
 
 
-    public CarPark(String id, double lat, double lon, String name, int emptySpace) {
+    public CarPark(String id, Double lat, double lon, String name, int emptySpace) {
         this.id = id;
         this.lat = lat;
         this.lon = lon;
@@ -34,19 +36,19 @@ public class CarPark {
         this.id = id;
     }
 
-    public double getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public double getLon() {
+    public Double getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
+    public void setLon(Double lon) {
         this.lon = lon;
     }
 
@@ -85,6 +87,6 @@ public class CarPark {
     @NonNull
     @Override
     public String toString() {
-        return name + "-" + distance + "-" + duration + "\n";
+        return name + "-" + lat + "-" + lon + "\n";
     }
 }
