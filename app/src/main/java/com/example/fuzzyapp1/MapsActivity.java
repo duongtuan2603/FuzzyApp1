@@ -30,15 +30,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Headers;
+import io.socket.emitter.Emitter;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -50,10 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DistanceService distanceService;
     private List<CarPark> carParks;
     String queryString = "";
+    private Socket mSocket;
+
+    {
+        try {
+            mSocket = IO.socket("http://192.168.2.103:4000");
+        } catch (URISyntaxException e) {
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSocket.on("new message", onNewMessage);
+        mSocket.connect();
+
         distanceService = new DistanceService("https://trueway-matrix.p.rapidapi.com/");
         distanceService = new DistanceService("http://192.168.2.103:4000/");
 
@@ -172,5 +188,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("socketMessage", "run: " + args[0]);
+                }
+            });
+        }
+    };
 
 }
