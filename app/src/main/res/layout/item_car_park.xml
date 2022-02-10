@@ -19,7 +19,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="12dp"
-            android:src="@color/black"
+            android:src="@drawable/ic_baseline_local_parking_24"
             app:layout_constraintBottom_toBottomOf="@id/divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

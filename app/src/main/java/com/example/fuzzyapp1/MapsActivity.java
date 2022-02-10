@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.fuzzyapp1.databinding.ActivityMapsBinding;
 
@@ -145,10 +146,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double latitude = location.getLatitude();
         // Add a marker in Sydney and move the camera
         LatLng currentLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
+        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
                 17));
+        mMap.setMyLocationEnabled(true);
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
         callAPILocation();
     }
 
@@ -166,6 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             } else {
                                 queryString = queryString.concat(carPark.getLat() + "," + carPark.getLon());
                             }
+                            callAPIDistance();
                         }
                     }
                 }
@@ -179,7 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void callAPIDistance(){
+    private void callAPIDistance() {
         distanceService.distanceAPI.getDistances("trueway-matrix.p.rapidapi.com", "d9394aba86msh5d9752ebcfcb740p10782ajsnad6dfcd9b9c6", queryString, location.getLatitude() + "," + location.getLongitude()).enqueue(new Callback<DistanceResponse>() {
             @Override
             public void onResponse(Call<DistanceResponse> call, Response<DistanceResponse> response) {
