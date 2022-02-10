@@ -10,8 +10,15 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        map:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintBottom_toTopOf="@id/rcv"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/rcv"
+        map:layout_constraintTop_toBottomOf="@id/map"
+        map:layout_constraintBottom_toTopOf="@id/btn"/>
 
     <Button
         android:layout_width="match_parent"
@@ -19,7 +26,8 @@
         android:text="Click"
         android:id="@+id/btn"
         map:layout_constraintBottom_toBottomOf="parent"
-        map:layout_constraintTop_toBottomOf="@id/map" />
+        map:layout_constraintTop_toBottomOf="@id/rcv"
+        android:layout_marginBottom="20dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,8 @@ public class CarPark implements Serializable {
     private int emptySpace;
     private double duration;
     private double distance;
+    private String distanceKilometer;
+    private String durationMinute;
 
     public enum DistanceClassified {
         NEAR,MIDDLE,FAR
@@ -82,6 +84,14 @@ public class CarPark implements Serializable {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public String getDistanceKilometer() {
+        return distance/1000+" km";
+    }
+
+    public String getDurationMinute() {
+        return duration/60 + " min";
     }
 
     @NonNull

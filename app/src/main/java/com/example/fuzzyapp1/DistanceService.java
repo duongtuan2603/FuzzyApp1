@@ -20,7 +20,7 @@ public class DistanceService {
     }
     public interface LocationAPI {
         @GET("api/infolocation")
-        Call<ResponseBody> getLocations();
+        Call<LocationResponse> getLocations();
     }
 
     public DistanceService(String host) {
